@@ -21,21 +21,16 @@ struct ShoppingListItemCard: View {
         VStack(spacing: 10) {
             HStack {
                 Text(name)
-                    .font(.title)
-                    .fontWeight(.bold)
+                    .modifier(MainTextStyle())
                 Spacer()
             }
             HStack {
-                Text("Količina: \(formattedAmount)")
-                    .font(.subheadline)
+                Text("Quantity: \(formattedAmount)")
+                    .modifier(TextStyle())
                 Spacer()
             }
         }
-        .padding(30)
-        .frame(height: 100)
-        .background(Color.white)
-        .clipShape(RoundedRectangle(cornerRadius: 30))
-        .shadow(color: Color.gray.opacity(0.30), radius: 20, x:0 ,y: 0)
+        .modifier(CardStyle())
     }
 }
 

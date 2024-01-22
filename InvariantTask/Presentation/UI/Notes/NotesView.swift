@@ -8,8 +8,38 @@
 import SwiftUI
 
 struct NotesView: View {
+    @StateObject private var viewModel = NotesViewModel()
     var body: some View {
-        Text("Notes view")
+        NavigationStack {
+            VStack {
+                List {
+                    ForEach(viewModel.notes) {
+                        item in
+                        
+                        ZStack {
+                            NavigationLink(destination: NoteItemView(noteItem: item, viewType: ViewType.edit)) {
+                                EmptyView()
+                            }
+                            .opacity(0)
+                            NotesCard(title: item.wrappedTitle, note: item.wrappedNote, linkedItems: item.shoppingItemArray.count)
+                        }
+                    }
+                    .listRowSeparator(.hidden)
+                }
+                .listStyle(PlainListStyle())
+                .scrollIndicators(.hidden)
+                
+                HStack {
+                    NavigationLink {
+                        NoteItemView(viewType: ViewType.create)
+                    } label: {
+                        Text("Add note")
+                            .padding()
+                            .modifier(ButtonStyle(backgroundColor: Color(.systemBlue)))
+                    }
+                }
+            }
+        }
     }
 }
 

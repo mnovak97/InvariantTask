@@ -20,7 +20,7 @@ struct ShoppingListView: View {
                                 EmptyView()
                             }
                             .opacity(0)
-                            ShoppingListItemCard(name: item.name ?? "", amount: item.amount)
+                            ShoppingListItemCard(name: item.wrappedName, amount: item.amount)
                         }
                     }
                     .listRowSeparator(.hidden)
@@ -34,10 +34,7 @@ struct ShoppingListView: View {
                     } label: {
                         Text("Add shopping item")
                             .padding()
-                            .bold()
-                            .background(Color(.systemBlue))
-                            .foregroundStyle(.white)
-                            .clipShape(RoundedRectangle(cornerRadius: 20))
+                            .modifier(ButtonStyle(backgroundColor: Color(.systemBlue)))
                     }
                 }
             }

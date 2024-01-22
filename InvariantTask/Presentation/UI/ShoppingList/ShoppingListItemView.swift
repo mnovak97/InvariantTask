@@ -8,9 +8,12 @@
 import SwiftUI
 
 struct ShoppingListItemView: View {
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel = ShoppingListViewModel()
-    @State private var changesMade: Bool = false
+    @State var changesMade: Bool = false
+    @State var initialSetName: Bool = false
+    @State var initialSetAmount: Bool = false
+    @State var showAlert = false
     var shoppingItem: ShoppingListItem?
     let viewType: ViewType
     
@@ -29,21 +32,46 @@ struct ShoppingListItemView: View {
                 addViewType()
             }
         }
-        .alert(isPresented: $changesMade) {
-                    Alert(
-                        title: Text("Discard Changes?"),
-                        message: Text("You have unsaved changes. Are you sure you want to discard them?"),
-                        primaryButton: .default(Text("Discard")) {
-                            presentationMode.wrappedValue.dismiss()
-                        },
-                        secondaryButton: .cancel()
-                    )
-        }
         .onChange(of: viewModel.name) {
-            changesMade = true
+            if initialSetName {
+                initialSetName = false
+            } else {
+                changesMade = true
+            }
         }
         .onChange(of: viewModel.amount) {
-            changesMade = true
+            if initialSetAmount {
+                initialSetAmount = false
+            } else {
+                changesMade = true
+            }
+        }
+        .alert(isPresented: $showAlert) {
+            Alert(
+                title: Text("Discard Changes?"),
+                message: Text("Are you sure you want to discard changes?"),
+                primaryButton: .default(Text("Discard")) {
+                    dismiss()
+                },
+                secondaryButton: .cancel()
+            )
+        }
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button {
+                    if changesMade {
+                        showAlert = true
+                    } else {
+                        dismiss()
+                    }
+                } label: {
+                    HStack {
+                        Image(systemName: "chevron.backward")
+                        Text("Back")
+                    }
+                }
+            }
         }
     }
 }
@@ -62,6 +90,7 @@ extension ShoppingListItemView {
                 .onAppear{
                     if let itemName = shoppingItem?.name {
                         viewModel.name = itemName
+                        initialSetName = true
                     }
                 }
             
@@ -76,6 +105,7 @@ extension ShoppingListItemView {
                 .onAppear {
                     if let itemAmount = shoppingItem?.amount {
                         viewModel.amount = itemAmount
+                        initialSetAmount = true
                     }
                 }
             HStack {
@@ -88,32 +118,24 @@ extension ShoppingListItemView {
                 Button(action: {
                     if let item = shoppingItem {
                         viewModel.edit(item: item, name: viewModel.name, amount: viewModel.amount)
-                        changesMade = false
-                        presentationMode.wrappedValue.dismiss()
+                            dismiss()
                     }
                 }, label: {
                      Text("Edit")
                         .frame(width: 100,height: 50)
-                        .bold()
-                        .background(Color(.systemBlue))
-                        .foregroundStyle(.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 20))
+                        .modifier(ButtonStyle(backgroundColor: Color(.systemBlue)))
                         
                 })
                 Spacer()
                 Button(action: {
                     if let item = shoppingItem {
                         viewModel.delete(shoppingItem: item)
-                        changesMade = false
-                        presentationMode.wrappedValue.dismiss()
+                        dismiss()
                     }
                 }, label: {
                      Text("Delete")
                         .frame(width: 100,height: 50)
-                        .bold()
-                        .background(Color(.red))
-                        .foregroundStyle(.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 20))
+                        .modifier(ButtonStyle(backgroundColor: Color(.red)))
                         
                 })
             }
@@ -147,14 +169,11 @@ extension ShoppingListItemView {
             HStack {
                 Button(action: {
                     viewModel.save()
-                    presentationMode.wrappedValue.dismiss()
+                    dismiss()
                 }, label: {
                      Text("Save")
                         .frame(width: 100,height: 50)
-                        .bold()
-                        .background(Color(.systemBlue))
-                        .foregroundStyle(.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 20))
+                        .modifier(ButtonStyle(backgroundColor: Color(.systemBlue)))
                         
                 })
             }

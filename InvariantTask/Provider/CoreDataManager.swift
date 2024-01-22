@@ -47,14 +47,25 @@ class CoreDataManager {
     }
     
     private func createAndSaveShoppingListItem(name: String, amount: Double) {
-            let newItem = ShoppingListItem(context: viewContext)
-            newItem.id = UUID()
-            newItem.name = name
-            newItem.amount = amount
-            newItem.creationDate = Date()
+        let newItem = ShoppingListItem(context: viewContext)
+        newItem.id = UUID()
+        newItem.name = name
+        newItem.amount = amount
+        newItem.creationDate = Date()
+    
+        save()
+    }
+    
+    private func createAndSaveNote(title: String, note: String, shoppingItems: [ShoppingListItem]) {
+        let newNote = Note(context: viewContext)
+        newNote.id = UUID()
+        newNote.title = title
+        newNote.note = note
+        newNote.creationDate = Date()
+        newNote.addToShoppingItems(NSSet(array: shoppingItems))
         
-            save()
-        }
+        save()
+    }
     
     private init() {
         container = NSPersistentContainer(name: "InvariantTask")
@@ -63,6 +74,11 @@ class CoreDataManager {
             if let error {
                 print("Data failed to load: \(error.localizedDescription)")
             }
+        }
+        
+        if fetchObjects(entityName: "Note").isEmpty {
+            createAndSaveNote(title: "Kupnja", note: "Kupi brzo", shoppingItems: [])
+            createAndSaveNote(title: "Kupnja", note: "Nemoj zaboravit", shoppingItems: [])
         }
         
         if fetchObjects(entityName: "ShoppingListItem").isEmpty {
