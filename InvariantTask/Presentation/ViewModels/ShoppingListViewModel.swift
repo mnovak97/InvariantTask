@@ -11,13 +11,18 @@ class ShoppingListViewModel : ObservableObject {
     @Published var name : String = ""
     @Published var amount : Double = 0.0
     @Published var shoppingListItems : [ShoppingListItem] = []
+    @Published var sortBy: SortOptionShoppingList = .id {
+        didSet {
+            fetchShoppingListItems()
+        }
+    }
     
     init() {
         fetchShoppingListItems()
     }
     
     func fetchShoppingListItems() {
-        shoppingListItems = CoreDataManager.shared.fetchObjects(entityName: "ShoppingListItem")
+        shoppingListItems = CoreDataManager.shared.fetchObjects(entityName: "ShoppingListItem", sortBy: [sortBy.sortDescriptor])
     }
     
     func delete(shoppingItem: ShoppingListItem) {
@@ -29,12 +34,6 @@ class ShoppingListViewModel : ObservableObject {
     }
     
     func save() {
-        let shoppingListItem = ShoppingListItem(context: CoreDataManager.shared.viewContext)
-        shoppingListItem.id = UUID()
-        shoppingListItem.name = name
-        shoppingListItem.amount = amount
-        shoppingListItem.creationDate = Date()
-        
-        CoreDataManager.shared.save()
+        CoreDataManager.shared.saveShoppingListItem(name: name, amount: amount)
     }
 }

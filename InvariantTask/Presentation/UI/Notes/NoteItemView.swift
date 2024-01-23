@@ -11,8 +11,10 @@ struct NoteItemView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel = NotesViewModel()
     @State var changesMade: Bool = false
+    @State var showAlert: Bool = false
+    @State var initialSet: Bool = false
+    @State private var selectedShoppingItem: ShoppingListItem?
     
-    @State var showAlert = false
     var noteItem: Note?
     let viewType: ViewType
     var body: some View {
@@ -23,6 +25,41 @@ struct NoteItemView: View {
             case .create:
                 addViewType()
             }
+        }
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button {
+                    if changesMade {
+                        showAlert = true
+                    } else {
+                        dismiss()
+                    }
+                } label: {
+                    HStack {
+                        Image(systemName: "chevron.backward")
+                        Text("Back")
+                    }
+                }
+            }
+        }
+        .onChange(of: [viewModel.note, viewModel.title]) {
+            if initialSet {
+                initialSet = false
+            } else {
+                changesMade = true
+            }
+        }
+        .onChange(of: viewModel.shoppingListAdded) {
+            changesMade = true
+        }
+        .alert("Discard Changes ?", isPresented: $showAlert) {
+            Button("Discard") {
+                dismiss()
+            }
+            Button("Cancle", role: .cancel) {}
+        } message : {
+            Text("Are you sure you want to discard changes?")
         }
     }
 }
@@ -41,6 +78,7 @@ extension NoteItemView {
                 .onAppear {
                     if let noteTitle = noteItem?.wrappedTitle {
                         viewModel.title = noteTitle
+                        initialSet = true
                     }
                 }
             HStack {
@@ -56,10 +94,42 @@ extension NoteItemView {
                         viewModel.note = noteText
                     }
                 }
+            VStack {
+                List {
+                    if let shoppingList = noteItem?.shoppingItemArray {
+                        ForEach(shoppingList) { shoppingItem in
+                            ShoppingListItemCard(name: shoppingItem.wrappedName, amount: shoppingItem.amount)
+                        }
+                        .listRowSeparator(.hidden)
+                    }
+                    
+                    ForEach(viewModel.shoppingListAdded) { item in
+                        ShoppingListItemCard(name: item.wrappedName, amount: item.amount)
+                    }
+                    .listRowSeparator(.hidden)
+                }
+                .listStyle(PlainListStyle())
+                .scrollIndicators(.hidden)
+                
+                NavigationLink(destination: ItemPickerView(selectedItem: $selectedShoppingItem, onItemSelected: {
+                        if let selectedItem = selectedShoppingItem {
+                            viewModel.shoppingListAdded.append(selectedItem)
+                            selectedShoppingItem = nil
+                        }
+                }), label: {
+                    Text("Link shopping item")
+                        .padding()
+                        .modifier(ButtonStyle(backgroundColor: Color(.systemBlue)))
+                })
+            }
+            
             Spacer()
             HStack {
                 Button(action: {
-                   
+                    if let note = noteItem {
+                        viewModel.edit(noteItem: note, title: viewModel.title, note: viewModel.note, shoppingList: viewModel.shoppingListAdded)
+                    }
+                    dismiss()
                 }, label: {
                      Text("Edit")
                         .frame(width: 100,height: 50)
@@ -68,7 +138,10 @@ extension NoteItemView {
                 })
                 Spacer()
                 Button(action: {
-                    
+                    if let note = noteItem {
+                        viewModel.delete(note: note)
+                    }
+                    dismiss()
                 }, label: {
                      Text("Delete")
                         .frame(width: 100,height: 50)
@@ -100,11 +173,32 @@ extension NoteItemView {
             TextField("Enter note text", text: $viewModel.note, axis: .vertical)
                 .multilineTextAlignment(.leading)
                 .textFieldStyle(.roundedBorder)
+            VStack {
+                List {
+                    ForEach(viewModel.shoppingListAdded) { item in
+                        ShoppingListItemCard(name: item.wrappedName, amount: item.amount)
+                    }
+                    .listRowSeparator(.hidden)
+                }
+                .listStyle(PlainListStyle())
+                .scrollIndicators(.hidden)
+                
+                NavigationLink(destination: ItemPickerView(selectedItem: $selectedShoppingItem, onItemSelected: {
+                        if let selectedItem = selectedShoppingItem {
+                            viewModel.shoppingListAdded.append(selectedItem)
+                            selectedShoppingItem = nil
+                        }
+                }), label: {
+                    Text("Link shopping item")
+                        .padding()
+                        .modifier(ButtonStyle(backgroundColor: Color(.systemBlue)))
+                })
+            }
             
             Spacer()
             HStack {
                 Button(action: {
-                    
+                    viewModel.save()
                     dismiss()
                 }, label: {
                      Text("Save")
@@ -112,6 +206,8 @@ extension NoteItemView {
                         .modifier(ButtonStyle(backgroundColor: Color(.systemBlue)))
                         
                 })
+                .disabled(viewModel.title.isEmpty || viewModel.note.isEmpty)
+                .opacity((viewModel.title.isEmpty || viewModel.note.isEmpty) ? 0.5 : 1.0)
             }
         }
         .padding()
@@ -119,5 +215,5 @@ extension NoteItemView {
 }
 
 #Preview {
-    NoteItemView(viewType: ViewType.edit)
+    NoteItemView(viewType: ViewType.create)
 }

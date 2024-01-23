@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		552AB2C12B5FE4D2003966BF /* SortOptionShoppingList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552AB2C02B5FE4D2003966BF /* SortOptionShoppingList.swift */; };
+		552AB2C32B5FE755003966BF /* SortOptionsNotes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552AB2C22B5FE755003966BF /* SortOptionsNotes.swift */; };
 		552FF8472B5684B300A4EF04 /* InvariantTaskApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552FF8462B5684B300A4EF04 /* InvariantTaskApp.swift */; };
 		552FF8492B5684B300A4EF04 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552FF8482B5684B300A4EF04 /* ContentView.swift */; };
 		552FF84B2B5684B500A4EF04 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 552FF84A2B5684B500A4EF04 /* Assets.xcassets */; };
@@ -30,9 +32,14 @@
 		554935062B5E95080061FC12 /* TextStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554935052B5E95080061FC12 /* TextStyle.swift */; };
 		554935082B5E95CB0061FC12 /* ButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554935072B5E95CB0061FC12 /* ButtonStyle.swift */; };
 		5549350A2B5E98BC0061FC12 /* NoteItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554935092B5E98BC0061FC12 /* NoteItemView.swift */; };
+		5549350D2B5EE92A0061FC12 /* ItemPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5549350C2B5EE92A0061FC12 /* ItemPickerView.swift */; };
+		5549350F2B5EF3870061FC12 /* ItemPickerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5549350E2B5EF3870061FC12 /* ItemPickerViewModel.swift */; };
+		554935122B5EFA0F0061FC12 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 554935112B5EFA0F0061FC12 /* SearchBar.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		552AB2C02B5FE4D2003966BF /* SortOptionShoppingList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortOptionShoppingList.swift; sourceTree = "<group>"; };
+		552AB2C22B5FE755003966BF /* SortOptionsNotes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortOptionsNotes.swift; sourceTree = "<group>"; };
 		552FF8432B5684B300A4EF04 /* InvariantTask.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InvariantTask.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		552FF8462B5684B300A4EF04 /* InvariantTaskApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvariantTaskApp.swift; sourceTree = "<group>"; };
 		552FF8482B5684B300A4EF04 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -57,6 +64,9 @@
 		554935052B5E95080061FC12 /* TextStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextStyle.swift; sourceTree = "<group>"; };
 		554935072B5E95CB0061FC12 /* ButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyle.swift; sourceTree = "<group>"; };
 		554935092B5E98BC0061FC12 /* NoteItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteItemView.swift; sourceTree = "<group>"; };
+		5549350C2B5EE92A0061FC12 /* ItemPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemPickerView.swift; sourceTree = "<group>"; };
+		5549350E2B5EF3870061FC12 /* ItemPickerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemPickerViewModel.swift; sourceTree = "<group>"; };
+		554935112B5EFA0F0061FC12 /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +123,7 @@
 		552FF8592B5689F200A4EF04 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				554935102B5EF9FD0061FC12 /* CustomComponent */,
 				554935002B5E92C50061FC12 /* ViewModifiers */,
 				552FF85B2B568A0200A4EF04 /* ViewModels */,
 				552FF85A2B5689FC00A4EF04 /* UI */,
@@ -123,6 +134,7 @@
 		552FF85A2B5689FC00A4EF04 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				5549350B2B5EE91A0061FC12 /* ItemPicker */,
 				552FF8682B56B19700A4EF04 /* Notes */,
 				552FF8672B56B18000A4EF04 /* ShoppingList */,
 			);
@@ -134,6 +146,7 @@
 			children = (
 				552FF8632B569E9100A4EF04 /* ShoppingListViewModel.swift */,
 				554934F22B5D649B0061FC12 /* NotesViewModel.swift */,
+				5549350E2B5EF3870061FC12 /* ItemPickerViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -170,6 +183,8 @@
 			isa = PBXGroup;
 			children = (
 				552FF86C2B56B22F00A4EF04 /* ViewType.swift */,
+				552AB2C02B5FE4D2003966BF /* SortOptionShoppingList.swift */,
+				552AB2C22B5FE755003966BF /* SortOptionsNotes.swift */,
 			);
 			path = Enums;
 			sourceTree = "<group>";
@@ -194,6 +209,22 @@
 				554935072B5E95CB0061FC12 /* ButtonStyle.swift */,
 			);
 			path = ViewModifiers;
+			sourceTree = "<group>";
+		};
+		5549350B2B5EE91A0061FC12 /* ItemPicker */ = {
+			isa = PBXGroup;
+			children = (
+				5549350C2B5EE92A0061FC12 /* ItemPickerView.swift */,
+			);
+			path = ItemPicker;
+			sourceTree = "<group>";
+		};
+		554935102B5EF9FD0061FC12 /* CustomComponent */ = {
+			isa = PBXGroup;
+			children = (
+				554935112B5EFA0F0061FC12 /* SearchBar.swift */,
+			);
+			path = CustomComponent;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -267,23 +298,28 @@
 			buildActionMask = 2147483647;
 			files = (
 				554934F92B5D6A820061FC12 /* ShoppingListItem+CoreDataProperties.swift in Sources */,
+				5549350D2B5EE92A0061FC12 /* ItemPickerView.swift in Sources */,
 				554934FA2B5D6A820061FC12 /* Note+CoreDataClass.swift in Sources */,
 				552FF8612B568A8D00A4EF04 /* NotesView.swift in Sources */,
 				554935042B5E94840061FC12 /* MainTextStyle.swift in Sources */,
+				554935122B5EFA0F0061FC12 /* SearchBar.swift in Sources */,
 				552FF85F2B568A7600A4EF04 /* ShoppingListView.swift in Sources */,
 				5549350A2B5E98BC0061FC12 /* NoteItemView.swift in Sources */,
 				552FF86D2B56B22F00A4EF04 /* ViewType.swift in Sources */,
 				554934F32B5D649B0061FC12 /* NotesViewModel.swift in Sources */,
 				552FF8662B56AA9E00A4EF04 /* ShoppingListItemCard.swift in Sources */,
+				552AB2C12B5FE4D2003966BF /* SortOptionShoppingList.swift in Sources */,
 				552FF8562B56852A00A4EF04 /* InvariantTask.xcdatamodeld in Sources */,
 				552FF8582B5686BD00A4EF04 /* CoreDataManager.swift in Sources */,
 				552FF8492B5684B300A4EF04 /* ContentView.swift in Sources */,
 				552FF8642B569E9100A4EF04 /* ShoppingListViewModel.swift in Sources */,
+				552AB2C32B5FE755003966BF /* SortOptionsNotes.swift in Sources */,
 				552FF86A2B56B1D100A4EF04 /* ShoppingListItemView.swift in Sources */,
 				554935082B5E95CB0061FC12 /* ButtonStyle.swift in Sources */,
 				554934F82B5D6A820061FC12 /* ShoppingListItem+CoreDataClass.swift in Sources */,
 				554934FF2B5E90DA0061FC12 /* NotesCard.swift in Sources */,
 				554935022B5E93510061FC12 /* CardStyle.swift in Sources */,
+				5549350F2B5EF3870061FC12 /* ItemPickerViewModel.swift in Sources */,
 				554935062B5E95080061FC12 /* TextStyle.swift in Sources */,
 				552FF8472B5684B300A4EF04 /* InvariantTaskApp.swift in Sources */,
 				554934FB2B5D6A820061FC12 /* Note+CoreDataProperties.swift in Sources */,

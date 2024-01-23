@@ -16,9 +16,10 @@ class CoreDataManager {
         container.viewContext
     }
     
-    func fetchObjects<T: NSManagedObject>(entityName: String) -> [T] {
+    func fetchObjects<T: NSManagedObject>(entityName: String, sortBy sortDescriptors: [NSSortDescriptor]? = nil) -> [T] {
         
         let request: NSFetchRequest<T> = NSFetchRequest(entityName: entityName)
+        request.sortDescriptors = sortDescriptors
         do {
             return try viewContext.fetch(request)
         } catch {
@@ -26,14 +27,51 @@ class CoreDataManager {
         }
         
     }
+    
     func delete<T:NSManagedObject> (_ item: T) {
         viewContext.delete(item)
+        save()
+    }
+    
+    
+    func saveShoppingListItem(name:String, amount: Double) {
+        let shoppingListItem = ShoppingListItem(context: CoreDataManager.shared.viewContext)
+        shoppingListItem.id = UUID()
+        shoppingListItem.name = name
+        shoppingListItem.amount = amount
+        shoppingListItem.creationDate = Date()
+        
         save()
     }
     
     func editShoppingListItem(_ item: ShoppingListItem, name: String, amount: Double) {
         item.name = name
         item.amount = amount
+        save()
+    }
+    
+    func editNote(_ item: Note, title: String, note: String, shoppingListItems: [ShoppingListItem]) {
+        item.title = title
+        item.note = note
+        
+        for shoppingListItem in shoppingListItems {
+            item.addToShoppingItems(shoppingListItem)
+        }
+        
+        save()
+    }
+    
+    func saveNote(title: String, note: String, shoppingListItems: [ShoppingListItem]) {
+        let noteItem = Note(context: CoreDataManager.shared.viewContext)
+        noteItem.id = UUID()
+        noteItem.title = title
+        noteItem.note = note
+        noteItem.creationDate = Date()
+        
+        for shoppingListItem in shoppingListItems {
+            noteItem.addToShoppingItems(shoppingListItem)
+        }
+        
         save()
     }
     

@@ -12,6 +12,13 @@ struct NotesView: View {
     var body: some View {
         NavigationStack {
             VStack {
+                Picker("Sort By", selection: $viewModel.sortBy) {
+                    Text("ID").tag(SortOptionsNotes.id)
+                    Text("Title").tag(SortOptionsNotes.title)
+                    Text("Linked items").tag(SortOptionsNotes.linkedItems)
+                }
+                .pickerStyle(SegmentedPickerStyle())
+                .padding()
                 List {
                     ForEach(viewModel.notes) {
                         item in
@@ -38,6 +45,9 @@ struct NotesView: View {
                             .modifier(ButtonStyle(backgroundColor: Color(.systemBlue)))
                     }
                 }
+            }
+            .onAppear {
+                viewModel.fetchNotes()
             }
         }
     }

@@ -37,6 +37,10 @@ extension Note {
             $0.wrappedName < $1.wrappedName
         }
     }
+    
+    public var shoppingItemsCount: Int {
+        return shoppingItems?.count ?? 0
+    }
 
 }
 

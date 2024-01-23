@@ -12,6 +12,12 @@ struct ShoppingListView: View {
     var body: some View {
         NavigationStack {
             VStack {
+                Picker("Sort By", selection: $viewModel.sortBy) {
+                    Text("ID").tag(SortOptionShoppingList.id)
+                    Text("Name").tag(SortOptionShoppingList.name)
+                }
+                .pickerStyle(SegmentedPickerStyle())
+                .padding()
                 List {
                     ForEach(viewModel.shoppingListItems) { item in
                         

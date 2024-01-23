@@ -176,6 +176,8 @@ extension ShoppingListItemView {
                         .modifier(ButtonStyle(backgroundColor: Color(.systemBlue)))
                         
                 })
+                .disabled(viewModel.name.isEmpty || viewModel.amount == 0)
+                .opacity((viewModel.name.isEmpty || viewModel.amount == 0) ? 0.5 : 1.0)
             }
         }
         .padding()
