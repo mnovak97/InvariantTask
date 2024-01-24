@@ -120,6 +120,7 @@ extension NoteItemView {
                         if let selectedItem = selectedShoppingItem {
                             viewModel.shoppingListAdded.append(selectedItem)
                             selectedShoppingItem = nil
+                            changesMade = true
                         }
                 }), label: {
                     Text("Link shopping item")
