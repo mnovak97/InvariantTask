@@ -8,7 +8,7 @@
 import Foundation
 
 enum SortOptionShoppingList {
-    case name, id
+    case name, id, creationDate
     
     var sortDescriptor: NSSortDescriptor {
         switch self {
@@ -16,6 +16,8 @@ enum SortOptionShoppingList {
             return NSSortDescriptor(key: "id", ascending: false)
         case .name:
             return NSSortDescriptor(key: "name", ascending: true)
+        case .creationDate:
+            return NSSortDescriptor(key: "creationDate", ascending: false)
         }
     }
     

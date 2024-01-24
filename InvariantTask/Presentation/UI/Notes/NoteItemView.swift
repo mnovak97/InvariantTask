@@ -13,6 +13,7 @@ struct NoteItemView: View {
     @State var changesMade: Bool = false
     @State var showAlert: Bool = false
     @State var initialSet: Bool = false
+    @State var initialListSet: Bool = false
     @State private var selectedShoppingItem: ShoppingListItem?
     
     var noteItem: Note?
@@ -51,13 +52,17 @@ struct NoteItemView: View {
             }
         }
         .onChange(of: viewModel.shoppingListAdded) {
-            changesMade = true
+            if initialListSet {
+                initialListSet = false
+            } else {
+                changesMade = true
+            }
         }
         .alert("Discard Changes ?", isPresented: $showAlert) {
             Button("Discard") {
                 dismiss()
             }
-            Button("Cancle", role: .cancel) {}
+            Button("Cancel", role: .cancel) {}
         } message : {
             Text("Are you sure you want to discard changes?")
         }
@@ -95,14 +100,14 @@ extension NoteItemView {
                     }
                 }
             VStack {
+                Picker("Sort By", selection: $viewModel.option) {
+                    Text("ID").tag(SortOptionShoppingList.id)
+                    Text("Name").tag(SortOptionShoppingList.name)
+                    Text("Creation date").tag(SortOptionShoppingList.creationDate)
+                }
+                .pickerStyle(SegmentedPickerStyle())
+                .padding()
                 List {
-                    if let shoppingList = noteItem?.shoppingItemArray {
-                        ForEach(shoppingList) { shoppingItem in
-                            ShoppingListItemCard(name: shoppingItem.wrappedName, amount: shoppingItem.amount)
-                        }
-                        .listRowSeparator(.hidden)
-                    }
-                    
                     ForEach(viewModel.shoppingListAdded) { item in
                         ShoppingListItemCard(name: item.wrappedName, amount: item.amount)
                     }
@@ -152,6 +157,16 @@ extension NoteItemView {
             .padding(.leading,20)
             .padding(.trailing,20)
         }
+        .onAppear {
+            if let noteShoppingList = noteItem?.shoppingItemArray {
+                if viewModel.shoppingListAdded.isEmpty {
+                    for shoppingItem in noteShoppingList {
+                        viewModel.shoppingListAdded.append(shoppingItem)
+                    }
+                    initialListSet = true
+                }
+            }
+        }
         .padding()
     }
     
@@ -174,6 +189,13 @@ extension NoteItemView {
                 .multilineTextAlignment(.leading)
                 .textFieldStyle(.roundedBorder)
             VStack {
+                Picker("Sort By", selection: $viewModel.option) {
+                    Text("ID").tag(SortOptionShoppingList.id)
+                    Text("Name").tag(SortOptionShoppingList.name)
+                    Text("Creation date").tag(SortOptionShoppingList.creationDate)
+                }
+                .pickerStyle(SegmentedPickerStyle())
+                .padding()
                 List {
                     ForEach(viewModel.shoppingListAdded) { item in
                         ShoppingListItemCard(name: item.wrappedName, amount: item.amount)
@@ -206,8 +228,8 @@ extension NoteItemView {
                         .modifier(ButtonStyle(backgroundColor: Color(.systemBlue)))
                         
                 })
-                .disabled(viewModel.title.isEmpty || viewModel.note.isEmpty)
-                .opacity((viewModel.title.isEmpty || viewModel.note.isEmpty) ? 0.5 : 1.0)
+                .disabled(viewModel.title.isEmpty)
+                .opacity((viewModel.title.isEmpty) ? 0.5 : 1.0)
             }
         }
         .padding()

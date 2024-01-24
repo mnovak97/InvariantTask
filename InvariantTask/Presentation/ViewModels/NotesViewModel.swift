@@ -18,8 +18,27 @@ class NotesViewModel : ObservableObject {
         }
     }
     
+    @Published var option: SortOptionShoppingList = .id {
+        didSet {
+            sortShoppingList(by: option)
+        }
+    }
+    
     init() {
         fetchNotes()
+    }
+    
+    func sortShoppingList(by option: SortOptionShoppingList) {
+        shoppingListAdded.sort { item1 , item2 in
+            switch option {
+            case .name:
+                return item1.wrappedName < item2.wrappedName
+            case .id:
+                return item1.id > item2.id
+            case .creationDate:
+                return item1.creationDate! > item2.creationDate!
+            }
+        }
     }
     
     func fetchNotes() {
